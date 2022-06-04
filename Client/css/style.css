@@ -1,0 +1,17 @@
+html, body {
+	/* общие настройки страницы */
+  height: 100%;
+  margin: 0;
+}
+/* настройки внешнего вида страницы и положения элементов */
+body {
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+	/* делаем зелёный фон у холста */
+  background: forestgreen;
+}
