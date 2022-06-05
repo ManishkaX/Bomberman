@@ -27,11 +27,11 @@ class Player {
     }
 }
 
-function Bomb(row, col, owner) {
+function Bomb(row, col) {
     this.row = row;
     this.col = col;
     this.radius = grid * 0.4;
-    this.owner = owner;
+    
     this.size = 2;
     this.alive = true;
     this.type = types.bomb;
@@ -62,7 +62,7 @@ function Bomb(row, col, owner) {
         //debugger;
         context.fillStyle = 'black';
         context.beginPath();
-        context.arc(x, y, this, this.radius, 0, 2 * Math.PI);
+        context.arc(x, y, this.radius, 0, 2 * Math.PI);
         context.fill();
 
         const fuseY = (this.radius === grid * 0.5 ? grid * 0.15 : 0);
@@ -156,9 +156,12 @@ function blowUpBomb(bomb) {
 
             entities.push(new Explosion(row, col, dir, i === 0 ? true : false));
 
-            if (i != 0 && template[row][col] == types.softWall)
-                ws.send(JSON.stringify(new ModifyBlockMessage(row, col, true)));
-            
+            if (i != 0 && template[row][col] == types.softWall) {
+                console.log("Block at ( X: " + col + "; Y: " + row + ")");
+                sleep(100);
+                ws.send(JSON.stringify(new ModifyBlockMessage(col, row, true)));
+            }
+
             template[row][col] = null;
 
 
@@ -178,4 +181,12 @@ function blowUpBomb(bomb) {
             }
         }
     });
+}
+
+function sleep(ms) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < ms);
 }

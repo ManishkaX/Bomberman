@@ -113,12 +113,12 @@ ws.onmessage = function (event) {
             break;
 
         case 3:
-            console.log("Block at (" + messageRaw.PositionX + ";" + messageRaw.PositionY + ")");
+            console.log("Block at ( X: " + messageRaw.PositionX + "; Y: " + messageRaw.PositionY + ") and IsDelete = " + messageRaw.IsDelete);
             if (!messageRaw.IsDelete) {
-                template[messageRaw.PositionX][messageRaw.PositionY] = types.softWall;
+                template[messageRaw.PositionY][messageRaw.PositionX] = types.softWall;
             }
             else {
-                template[messageRaw.PositionX][messageRaw.PositionY] = null;
+                template[messageRaw.PositionY][messageRaw.PositionX] = null;
             }
 
             drawMap();
@@ -126,7 +126,7 @@ ws.onmessage = function (event) {
             break;
 
         case 4:
-
+            entities.push(new Bomb(messageRaw.PositionY, messageRaw.PositionX));
             break;
 
         case 5:
@@ -219,7 +219,6 @@ function gameLoop(timestamp) {
         player.RenderPlayer();
     });
 
-   
 }
 
 document.addEventListener('keydown', function (e) {
@@ -227,26 +226,27 @@ document.addEventListener('keydown', function (e) {
     let row = currentPlayer.PositionY;
     console.log(e.key + " " + row + " " + col);
 
-    switch (e.key) {
-        case 'w':
+    switch (e.code) {
+        case 'KeyW':
             row--;
             break;
 
-        case 'a':
+        case 'KeyA':
             col--;
             break;
 
-        case 's':
+        case 'KeyS':
             row++;
             break;
 
-        case 'd':
+        case 'KeyD':
             col++;
             break;
-        case ' ':
-            if (entities.filter(entity => { return entity.type === types.bomb && entity.owner === currentPlayer}).length < currentPlayer.BombCount)
+        case 'Space':
+            if (entities.filter(entity => { return entity.type === types.bomb}).length < currentPlayer.BombCount)
             {
                 const bomb = new Bomb(row, col, currentPlayer);
+                ws.send(JSON.stringify(new PlaceBombMessage(col, row)));
 
                 entities.push(bomb);
                 template[row][col] = types.bomb;

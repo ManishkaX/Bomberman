@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Drawing;
 
 namespace Server;
@@ -11,7 +12,7 @@ public static class Map
 
     public static CellTypes[,] MapTemplate = new CellTypes[Height, Width];
 
-    public static List<Point> SoftBlocks = new List<Point>();
+    public static ConcurrentDictionary<Point, bool> SoftBlocks = new ConcurrentDictionary<Point, bool>();
 
 
     public static void GenerateMap()
@@ -48,7 +49,7 @@ public static class Map
                 if (random.Next(1, 100) < 60)
                 {
                     MapTemplate[row, col] = CellTypes.SoftBlock;
-                    SoftBlocks.Add(new Point(row, col));
+                    SoftBlocks.TryAdd(new Point(col, row), true);
                 }
 
 

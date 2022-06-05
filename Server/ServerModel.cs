@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Server.Messaging;
 using System.Text.Json;
+using System.Drawing;
 
 namespace Server
 {
@@ -124,7 +125,7 @@ namespace Server
 
                                 foreach (var block in Map.SoftBlocks)
                                 {
-                                    var message = new ModifyBlockMessage(block.X, block.Y, false);
+                                    var message = new ModifyBlockMessage(block.Key.X, block.Key.Y, false);
                                     SendMessage(user.Socket, message);
                                 }
                             }
@@ -163,10 +164,14 @@ namespace Server
                         case '3':
                             var modMessage = (ModifyBlockMessage?)JsonSerializer.Deserialize(text, typeof(ModifyBlockMessage));
                             Console.WriteLine(modMessage);
-                            Map.MapTemplate[modMessage.PositionX, modMessage.PositionY] = Map.CellTypes.Empty;
+
+                            Map.MapTemplate[modMessage.PositionY, modMessage.PositionX] = Map.CellTypes.Empty;
                             
+                            if (Map.SoftBlocks.TryRemove(new Point(modMessage.PositionX, modMessage.PositionY), out var _))
+                            {
+                                Console.WriteLine("Delete " + modMessage.PositionX + modMessage.PositionY);
+                            } else Console.WriteLine("Error del.");
                             
-                            Map.SoftBlocks.Remove(new System.Drawing.Point(modMessage.PositionX, modMessage.PositionY));
 
                             foreach (var user in _users.Select(u => u.Value))
                             {

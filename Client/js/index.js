@@ -308,7 +308,7 @@ function blowUpBomb(bomb) {
                         entity.row === row && entity.col === col
                     );
                 });
-                // и взываем её
+                // и взрываем её
                 blowUpBomb(nextBomb);
             }
 
