@@ -1,3 +1,7 @@
+let playerImage = new Image();
+playerImage.src = '../img/player.png';
+
+
 class Player {
     UserID;
     Username;
@@ -16,14 +20,18 @@ class Player {
 
     RenderPlayer() {
         //debugger;
-        const x = (this.PositionX + 0.5) * grid;
-        const y = (this.PositionY + 0.5) * grid;
+        const x = this.PositionX * grid;
+        const y = this.PositionY * grid;
 
-        context.save();
-        context.fillStyle = 'white';
-        context.beginPath();
-        context.arc(x, y, grid * 0.35, 0, 2 * Math.PI);
-        context.fill();
+        //context.save();
+        //context.fillStyle = 'white';
+        //context.beginPath();
+        //context.arc(x, y, grid * 0.35, 0, 2 * Math.PI);
+        //context.fill();
+        //debugger;
+        var ctx = document.getElementById('game').getContext('2d');
+        ctx.drawImage(playerImage, x, y);
+ 
     }
 }
 
